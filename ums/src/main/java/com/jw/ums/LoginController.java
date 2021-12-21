@@ -7,8 +7,6 @@ import com.jw.common.entity.ums.Node;
 import com.jw.common.entity.ums.Role;
 import com.jw.common.result.Code;
 import com.jw.common.result.Err;
-import com.jw.common.result.Res;
-import com.jw.ums.aop.IgnoreResAnnotate;
 import com.jw.ums.entity.*;
 import com.jw.ums.mapper.*;
 import com.jw.ums.redis.RedisUtils;
@@ -50,7 +48,7 @@ public class LoginController {
      * @return
      */
     @PostMapping("login")
-    public Res login(@RequestParam String username, @RequestParam String password) throws JsonProcessingException {
+    public LoginInfo login(@RequestParam String username, @RequestParam String password) throws JsonProcessingException {
         boolean root = false;//超级管理员
         List<Role> roles = new ArrayList<>();//角色数组
         List<String> nodes = new ArrayList<>();//权限数组（无去重）
@@ -95,7 +93,7 @@ public class LoginController {
         loginInfo.setRoles(roles);
         loginInfo.setNodes(nodes);
         redisUtils.set(token,new ObjectMapper().writeValueAsString(loginInfo));
-        return new Res(loginInfo);
+        return loginInfo;
     }
 
     /**
@@ -104,11 +102,11 @@ public class LoginController {
      * @return
      */
     @PostMapping("logout")
-    public Res logout(@RequestParam String token){
-        if (StringUtils.isBlank(token)) return Res.err("token不能为空");
+    public String logout(@RequestParam String token){
+        if (StringUtils.isBlank(token)) throw new Err("token不能为空");
         if (!redisUtils.hasKey(token)) throw new Err(Code.NOT_LOGIN.getNum(), "token不存在，请重新登录。");
         redisUtils.del(token);//删除token即可
-        return new Res();
+        return "登出成功";
     }
 
     /**
@@ -118,13 +116,13 @@ public class LoginController {
      * @return
      */
     @PostMapping("checkUserNameAndPassword")
-    public Res checkUserNameAndPassword(@RequestParam String name,@RequestParam String password){
+    public boolean checkUserNameAndPassword(@RequestParam String name,@RequestParam String password){
         if (StringUtils.isBlank(name)) throw new Err("用户名不能为空");
         if (StringUtils.isBlank(password)) throw new Err("密码不能为空");
         User user = userMapper.selectByUsername(name);
         if (user == null)throw new Err("用户不存在");
         if (!user.getPassword().equals(DigestUtils.md5DigestAsHex((name+password).getBytes()))) throw new Err("密码错误");
-        return new Res();
+        return true;
     }
 
     /**
@@ -135,12 +133,12 @@ public class LoginController {
      * @return
      */
     @PostMapping("updatePassword")
-    public Res updatePassword(@RequestParam Integer userId,@RequestParam String name,@RequestParam String password){
+    public int updatePassword(@RequestParam Integer userId,@RequestParam String name,@RequestParam String password){
         if (userId == null) throw new Err("用户ID不能为空");
         if (StringUtils.isBlank(name)) throw new Err("用户名不能为空");
         if (StringUtils.isBlank(password)) throw new Err("密码不能为空");
         String newPassword = DigestUtils.md5DigestAsHex((name+password).getBytes());//新密码加密
-        return new Res(userMapper.updatePassword(userId,name,newPassword));
+        return userMapper.updatePassword(userId,name,newPassword);
     }
 
 
@@ -152,12 +150,12 @@ public class LoginController {
      * @return
      */
     @PostMapping("forceUpdatePassword")
-    public Res forceUpdatePassword(@RequestParam Integer userId,@RequestParam String name,@RequestParam(required = false) String password){
+    public int forceUpdatePassword(@RequestParam Integer userId, @RequestParam String name, @RequestParam(required = false) String password){
         if (userId == null) throw new Err("用户ID不能为空");
         if (StringUtils.isBlank(name)) throw new Err("用户名不能为空");
         if (StringUtils.isBlank(password)) password = "a";//不传密码，密码默认为a
         String newPassword = DigestUtils.md5DigestAsHex((name+password).getBytes());//新密码加密
-        return new Res(userMapper.updatePassword(userId,name,newPassword));
+        return userMapper.updatePassword(userId,name,newPassword);
     }
 
 }

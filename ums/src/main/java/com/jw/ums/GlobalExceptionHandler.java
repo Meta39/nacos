@@ -37,25 +37,25 @@ public class GlobalExceptionHandler {
      * 自定义异常
      */
     @ExceptionHandler(value = Err.class)
-    public Res Err(Err e){
-        return Res.err(e.getMsg());
+    public Res Err(Err e) {
+        return e.getCode() == 0 ? Res.err(e.getMsg()) : Res.err(e.getCode(), e.getMsg());
     }
 
     /**
      * 空指针异常
      */
-    @ExceptionHandler(value =NullPointerException.class)
-    public Res exceptionHandler(NullPointerException e){
-        log.error("空指针异常"+getExceptionDetail(e));
+    @ExceptionHandler(value = NullPointerException.class)
+    public Res exceptionHandler(NullPointerException e) {
+        log.error("空指针异常" + getExceptionDetail(e));
         return Res.err("空指针异常");
     }
 
     /**
      * 其他异常
      */
-    @ExceptionHandler(value =Exception.class)
-    public Res exception(Exception e){
-        log.error("500异常：{}"+getExceptionDetail(e));
+    @ExceptionHandler(value = Exception.class)
+    public Res exception(Exception e) {
+        log.error("500异常：{}" + getExceptionDetail(e));
         return Res.err("500异常");
     }
 
@@ -65,8 +65,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     public Res bindException(BindException e) {
         // 然后提取错误提示信息进行返回
-        log.error("参数校验异常："+e.getBindingResult().getFieldError().getDefaultMessage());
-        return Res.err("参数校验异常："+e.getBindingResult().getFieldError().getDefaultMessage());
+        log.error("参数校验异常：" + e.getBindingResult().getFieldError().getDefaultMessage());
+        return Res.err("参数校验异常：" + e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     /**
@@ -74,8 +74,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Res missingServletRequestParameterException(MissingServletRequestParameterException e) {
-        log.error("请求参数异常"+e);
-        return Res.err("缺少请求参数："+e.getParameterName());
+        log.error("请求参数异常" + e);
+        return Res.err("缺少请求参数：" + e.getParameterName());
     }
 
 }

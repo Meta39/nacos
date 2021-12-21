@@ -13,9 +13,27 @@ public class Res<T>{
         this.data = data;
     }
 
+    /**
+     * 普通异常，如：0自定义异常等
+     * @param msg
+     * @return
+     */
     public static Res err(String msg) {
         Res res = new Res();
         res.setCode(Code.FAIL.getNum());
+        res.setMsg(msg);
+        return res;
+    }
+
+    /**
+     * 特殊异常，如：-1未登录异常，404找不到页面异常等
+     * @param code 异常码
+     * @param msg 异常信息
+     * @return
+     */
+    public static Res err(Integer code,String msg) {
+        Res res = new Res();
+        res.setCode(code);
         res.setMsg(msg);
         return res;
     }
