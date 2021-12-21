@@ -60,7 +60,7 @@ public class GatewayFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         } else {//返回错误信息给前端
             Res res = new Res();
-            res.setStatus(-1);
+            res.setCode(-1);
             res.setData("token不存在");
 
             byte[] bytes = new byte[0];

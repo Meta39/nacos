@@ -1,27 +1,42 @@
 package com.jw.common.result;
 
 public class Err extends RuntimeException{
-    private int status;//状态码
-    private String data;//错误信息
+    private Integer code;
+    private String msg;
 
     public Err(){}
+
+    /**
+     * 默认状态码为0
+     * @param message 错误信息
+     */
     public Err(String message){
-        this.data = message;
+        this.msg = message;
     }
 
-    public int getStatus() {
-        return status;
+    /**
+     * 自定义异常和状态码
+     * @param code 自定义的状态码，如：登录为-1等
+     * @param message 错误信息
+     */
+    public Err(Integer code,String message){
+        this.code = code;
+        this.msg = message;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public Integer getCode() {
+        return code;
     }
 
-    public String getData() {
-        return data;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

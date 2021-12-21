@@ -5,13 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jw.common.entity.ums.LoginInfo;
 import com.jw.common.entity.ums.Node;
 import com.jw.common.entity.ums.Role;
+import com.jw.common.result.Code;
 import com.jw.common.result.Err;
 import com.jw.common.result.Res;
+import com.jw.ums.aop.IgnoreResAnnotate;
 import com.jw.ums.entity.*;
 import com.jw.ums.mapper.*;
 import com.jw.ums.redis.RedisUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +36,12 @@ public class LoginController {
     private NodeMapper nodeMapper;
     @Resource
     private RedisUtils redisUtils;
+
+//    @IgnoreResAnnotate//不返回Res，直接返回接口类型
+    @GetMapping("test")
+    public String test(){
+        return "test";
+    }
 
     /**
      * 登录
@@ -97,7 +106,7 @@ public class LoginController {
     @PostMapping("logout")
     public Res logout(@RequestParam String token){
         if (StringUtils.isBlank(token)) return Res.err("token不能为空");
-        if (!redisUtils.hasKey(token)) return Res.err("token已过期");
+        if (!redisUtils.hasKey(token)) throw new Err(Code.NOT_LOGIN.getNum(), "token不存在，请重新登录。");
         redisUtils.del(token);//删除token即可
         return new Res();
     }

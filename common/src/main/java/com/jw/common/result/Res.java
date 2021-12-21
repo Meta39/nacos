@@ -1,29 +1,39 @@
 package com.jw.common.result;
 
-public class Res<T> {
-    private int status = 1;//状态码
-    private T data;//数据
+public class Res<T>{
+    private Integer code;
+    private String msg;
+    private T data;
 
     public Res(){}
 
     public Res(T data) {
+        this.code = Code.SUCCESS.getNum();
+        this.msg = Code.SUCCESS.getMsg();
         this.data = data;
     }
 
-    //全局异常抛出时使用
-    public static Res err(String data){
+    public static Res err(String msg) {
         Res res = new Res();
-        res.setStatus(0);
-        res.setData(data);
+        res.setCode(Code.FAIL.getNum());
+        res.setMsg(msg);
         return res;
     }
 
-    public int getStatus() {
-        return status;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {

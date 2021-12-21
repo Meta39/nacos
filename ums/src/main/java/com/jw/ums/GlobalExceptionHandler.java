@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Err.class)
     public Res Err(Err e){
-        return Res.err(e.getData());
+        return Res.err(e.getMsg());
     }
 
     /**
