@@ -104,7 +104,7 @@ public class LoginController {
     @PostMapping("logout")
     public String logout(@RequestParam String token){
         if (StringUtils.isBlank(token)) throw new Err("token不能为空");
-        if (!redisUtils.hasKey(token)) throw new Err(Code.NOT_LOGIN.getNum(), "token不存在，请重新登录。");
+        if (!redisUtils.hasKey(token)) throw new Err(Code.NOT_LOGIN.getNum(), Code.NOT_LOGIN.getMsg());
         redisUtils.del(token);//删除token即可
         return "登出成功";
     }

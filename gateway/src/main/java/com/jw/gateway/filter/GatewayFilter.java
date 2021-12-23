@@ -61,7 +61,7 @@ public class GatewayFilter implements GlobalFilter, Ordered {
         } else {//返回错误信息给前端
             Res res = new Res();
             res.setCode(-1);
-            res.setData("token不存在");
+            res.setMsg("未登录");
 
             byte[] bytes = new byte[0];
             try {
