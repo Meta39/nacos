@@ -13,6 +13,7 @@
         <module>common</module>
         <module>gateway</module>
         <module>ums</module>
+        <module>log</module>
     </modules>
 
     <!-- 谨慎修改版本依赖 -->

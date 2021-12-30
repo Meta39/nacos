@@ -61,7 +61,7 @@ public class LogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         try {
-            logFeign.update(new Log(request.getHeader("userName"), Long.valueOf(request.getHeader("userId")), "IP：" + request.getRemoteAddr() + "，URL：" + request.getRequestURL().toString() + "，Request Args：" + new ObjectMapper().writeValueAsString(point.getArgs()), false));
+            logFeign.insert(new Log(request.getHeader("userName"), Long.valueOf(request.getHeader("userId")), "IP：" + request.getRemoteAddr() + "，URL：" + request.getRequestURL().toString() + "，Request Args：" + new ObjectMapper().writeValueAsString(point.getArgs()), false));
         }catch (FeignException e){
             logger.error("日志系统崩了：",e);
         }
@@ -76,7 +76,7 @@ public class LogAspect {
         HttpServletRequest request = attributes.getRequest();
         Object result = point.proceed();//执行切点
         try {
-            logFeign.update(new Log(request.getHeader("userName"),Long.valueOf(request.getHeader("userId")),"IP："+request.getRemoteAddr()+"，URL："+request.getRequestURL().toString()+"，Request Args："+new ObjectMapper().writeValueAsString(point.getArgs())+"，Response Args："+new ObjectMapper().writeValueAsString(result),true));
+            logFeign.insert(new Log(request.getHeader("userName"),Long.valueOf(request.getHeader("userId")),"IP："+request.getRemoteAddr()+"，URL："+request.getRequestURL().toString()+"，Request Args："+new ObjectMapper().writeValueAsString(point.getArgs())+"，Response Args："+new ObjectMapper().writeValueAsString(result),true));
         }catch (FeignException e){
             logger.error("日志系统崩了：",e);
         }

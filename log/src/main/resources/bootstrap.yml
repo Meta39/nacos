@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ums
+    name: log
   cloud:
     nacos:
       config:

@@ -3,6 +3,7 @@ package com.jw.ums.controller;
 import com.jw.common.result.Res;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageSerializable;
+import com.jw.ums.aop.LogAnnotate;
 import com.jw.ums.entity.User;
 import com.jw.ums.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,9 @@ public class UserController {
      *
      * @param id
      */
-    @PostMapping("select")
+    @GetMapping("select")
 //    @PowerAnnotate("user/select")//切面实现授权
+//    @LogAnnotate()//切面实现记录日志
     public Res select(@RequestParam Integer id) {
         return new Res(userService.select(id));
     }
@@ -36,7 +38,7 @@ public class UserController {
     /**
      * 查询全部
      */
-    @PostMapping("selectAll")
+    @GetMapping("selectAll")
     public Res selectAll() {
         return new Res(userService.selectAll());
     }
@@ -47,7 +49,7 @@ public class UserController {
      * @param pageNum  起始页
      * @param pageSize 每页数据量
      */
-    @PostMapping("selectPage")
+    @GetMapping("selectPage")
     public Res selectPage(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return new Res(PageSerializable.of(userService.selectAll()));

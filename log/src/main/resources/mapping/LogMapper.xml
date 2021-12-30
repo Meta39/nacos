@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jw.log.mapper.LogMapper">
+
+    <resultMap type="com.jw.common.entity.log.Log" id="BaseResultMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="success" column="success" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">id
+    , user_name, user_id, content, success</sql>
+
+    <!-- 根据ID查询 -->
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from log
+        where id = #{id}
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from log
+        where 1=1
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.jw.common.entity.log.Log">
+        insert into log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="success != null">
+                success,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="success != null">
+                #{success},
+            </if>
+        </trim>
+    </insert>
+</mapper>
+
