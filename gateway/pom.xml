@@ -17,6 +17,11 @@
     </properties>
 
     <dependencies>
+        <!-- bootstrap.yml依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
         <!-- common公共依赖 -->
         <dependency>
             <groupId>com.jw</groupId>
@@ -78,5 +83,22 @@
 
     <build>
         <finalName>Gateway</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 指定程序的主类 -->
+                <configuration>
+                    <mainClass>com.jw.gateway.GatewayApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

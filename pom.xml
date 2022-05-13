@@ -35,11 +35,6 @@
 
     <!-- 必要依赖 -->
     <dependencies>
-        <!-- bootstrap.yml -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
     </dependencies>
 
     <!-- 非必要依赖 -->
@@ -68,6 +63,12 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- bootstrap.yml -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>3.1.2</version>
             </dependency>
             <!-- StringUtils工具类 -->
             <dependency>
@@ -109,7 +110,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.4.9</version>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
