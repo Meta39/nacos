@@ -8,14 +8,16 @@
         <version>1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>common</artifactId>
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
-    <build>
-        <finalName>common</finalName>
-    </build>
+    <packaging>pom</packaging>
+    <modules>
+        <module>core</module>
+        <module>redis</module>
+        <module>web</module>
+        <module>japidocs</module>
+        <module>minio</module>
+        <module>xxljob</module>
+        <module>dynamicmybatis</module>
+        <module>openfeign</module>
+    </modules>
 </project>

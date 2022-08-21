@@ -6,31 +6,33 @@
 
     <groupId>com.jw</groupId>
     <artifactId>nacos</artifactId>
-    <packaging>pom</packaging>
     <version>1</version>
+    <packaging>pom</packaging>
     <!-- 子模块 -->
     <modules>
         <module>common</module>
         <module>gateway</module>
-        <module>ums</module>
-        <module>log</module>
+        <module>system</module>
     </modules>
 
     <!-- 谨慎修改版本依赖 -->
     <properties>
-        <spring.cloud.version>2020.0.1</spring.cloud.version>
-        <spring.cloud.alibaba.version>2021.1</spring.cloud.alibaba.version>
-        <spring.boot.version>2.4.2</spring.boot.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <commons.lang.version>2.5</commons.lang.version>
-        <pagehelper.version>1.2.13</pagehelper.version>
-        <japidocs.version>1.4.4</japidocs.version>
-        <mysql8.version>8.0.23</mysql8.version>
-        <mybatis-spring.version>2.0.6</mybatis-spring.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.cloud.version>2020.0.1</spring.cloud.version>
+        <spring.cloud.alibaba.version>2021.1</spring.cloud.alibaba.version>
+        <!-- bootstrap.yml有些版本不引入了，先声明比较好,版本建议和spring cloud版本一致 -->
+        <spring.cloud.bootstrap.version>3.1.2</spring.cloud.bootstrap.version>
+        <spring.boot.version>2.4.2</spring.boot.version>
+        <mysql.version>8.0.23</mysql.version>
         <mybatis.version>2.2.0</mybatis.version>
-        <dom4j.version>1.6.1</dom4j.version>
-        <commons-io.version>2.5</commons-io.version>
+        <pagehelper.version>1.2.13</pagehelper.version>
+        <!-- minio版本能不升就不升，版本差异太大 -->
+        <minio.version>7.1.0</minio.version>
+        <xxl-job.version>2.3.1</xxl-job.version>
+        <logstash.version>7.2</logstash.version>
+        <japidocs.version>1.4.4</japidocs.version>
     </properties>
 
     <!-- 必要依赖 -->
@@ -68,19 +70,13 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                <version>3.1.2</version>
-            </dependency>
-            <!-- StringUtils工具类 -->
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.lang.version}</version>
+                <version>${spring.cloud.bootstrap.version}</version>
             </dependency>
             <!-- mysql -->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql8.version}</version>
+                <version>${mysql.version}</version>
                 <type>pom</type><!-- 有毒吧，为什么要加pom -->
                 <scope>import</scope>
             </dependency>
@@ -95,6 +91,24 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper.version}</version>
+            </dependency>
+            <!--minio分布式文件系统-->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+            <!--xxl-job分布式任务调度-->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
+            </dependency>
+            <!--Logstash日志输出到ElasticSearch-->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash.version}</version>
             </dependency>
             <!-- JApiDocs离线接口文档 -->
             <dependency>

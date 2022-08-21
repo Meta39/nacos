@@ -1,42 +1,44 @@
-<!-- 级别从高到低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
-<configuration scan="true" scanPeriod="60 seconds" debug="false">
+<configuration scanPeriod="60 seconds">
     <!-- 动态日志级别 -->
-    <jmxConfigurator />
-    <!-- 定义日志文件输出位置 -->
-    <property name="log_dir" value="./logs/Gateway/" />
-    <!-- 日志最大的历史/天 -->
-    <property name="maxHistory" value="15" />
+    <jmxConfigurator/>
+    <!-- 定义日志文件 输出位置 -->
+    <property name="log_dir" value="./logs/gateway/"/>
 
-    <!-- ConsoleAppender 控制台输出日志 -->
+    <!-- 控制台输出日志 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] %-60logger:%5line - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%magenta(%level)] %green([%logger]) >>> %cyan(%msg) %n
+            </pattern>
         </encoder>
     </appender>
 
-    <!-- INFO级别日志 appender -->
-    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 日志输出到文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/log-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>${maxHistory}</maxHistory>
+            <fileNamePattern>${log_dir}/log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 日志保留最大天数 -->
+            <maxHistory>30</maxHistory>
+            <!-- 日志总保存量为totalSizeCap -->
+            <totalSizeCap>30GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
             <!-- 重启项目后删除日志 -->
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] %-60logger:%5line - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] >>> %msg %n</pattern>
         </encoder>
     </appender>
-
-    <!-- root级别 -->
-    <root>
-        <!-- 打印级别日志及以上级别日志 -->
-        <level value="info" />
+    <logger name="demo" level="INFO"/>
+    <!-- root级别 DEBUG -->
+    <root level="INFO">
         <!-- 控制台输出 -->
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
         <!-- 文件输出 -->
-        <appender-ref ref="INFO" />
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

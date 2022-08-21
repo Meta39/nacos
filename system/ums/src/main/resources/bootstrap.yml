@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ums
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848 #nacos的url
+        file-extension: yaml #默认是properties
+        extension-configs[0]:
+          data-id: ${spring.application.name}
+          group: DEFAULT_GROUP
+          refresh: true
+        extension-configs[1]:
+          data-id: redis_config
+          group: DEFAULT_GROUP
+          refresh: true

@@ -2,77 +2,82 @@ package com.jw.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jw.common.result.Res;
-import com.jw.gateway.redis.RedisUtils;
-import org.apache.commons.lang.StringUtils;
+import com.jw.core.base.Err;
+import com.jw.core.base.Res;
+import com.jw.core.base.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 全局过滤器
+ * gateway网关过滤器
  **/
 @Component
+@RefreshScope   //变量改变时自动刷新
 public class GatewayFilter implements GlobalFilter, Ordered {
-    private static final Logger logger = LoggerFactory.getLogger(GatewayFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(GatewayFilter.class);
+
+    /**
+     * token过期时间
+     */
     @Value("${token-overtime}")
     private int tokenOvertime;
-    @Value("${filter-path}")
-    private String filterPath;
+
+    /**
+     * uri白名单
+     */
+    @Resource
+    private PassRequire passRequire;
 
     @Resource
-    RedisUtils redisUtils;
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-        DataBuffer buffer;
-        String requestPath = request.getPath().toString(); //前端请求URI
         String token = request.getHeaders().getFirst("token");
-        boolean harContains = false;//白名单URI
-        //遍历配置文件中白名单URI地址
-        for (String path : filterPath.split(",")) {
-            if (requestPath.contains(path)) {
-                harContains = true;
-                break;
-            }
-        }
+        //前端请求URI
+        String requestUri = request.getPath().toString();
+        //是否包含白名单uri
+        boolean pass = passRequire.getPath().stream().anyMatch(x -> requestUri.equals("/"+x));
+//        log.info("完整请求uri：{}",requestUri);
 
-        //RUI过滤
-        if (harContains) {//URI白名单
+        if (pass) {
+            //无token，uri白名单
             return chain.filter(exchange);
-        } else if (StringUtils.isNotBlank(token) && redisUtils.hasKey(token)) {//有token
-            redisUtils.set(token, redisUtils.get(token), tokenOvertime); //重置redis过期时间
+        } else if (StringUtils.hasLength(token) && Boolean.TRUE.equals(redisTemplate.hasKey(token))) {
+            //有token，非uri白名单
+            redisTemplate.expire(token,tokenOvertime, TimeUnit.SECONDS);//刷新token过期时间
             return chain.filter(exchange);
-        } else {//返回错误信息给前端
-            Res res = new Res();
-            res.setCode(-1);
-            res.setMsg("未登录");
-
-            byte[] bytes = new byte[0];
+        } else {
+            //非法请求，抛出异常
+            byte[] bytes;
             try {
-                bytes = new ObjectMapper().writeValueAsBytes(res);
+                bytes = new ObjectMapper().writeValueAsBytes(!StringUtils.hasLength(token) ? Res.err("请求头token不能为空！") : Res.err(Status.NOT_LOGIN.getStatus(), Status.NOT_LOGIN.getError()));
             } catch (JsonProcessingException e) {
-                logger.error("错误信息转换异常！"+e);
+                log.error("JSON处理异常",e);
+                throw new Err("JSON处理异常");
             }
-            buffer = response.bufferFactory().wrap(bytes);
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-            return response.writeWith(Mono.just(buffer));
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
         }
     }
 

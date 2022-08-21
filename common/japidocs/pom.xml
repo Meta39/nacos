@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>common</artifactId>
+        <groupId>com.jw</groupId>
+        <version>1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>japidoc</artifactId>
+    <version>1</version>
+    <description>JApiDocs离线接口文档生成工具</description>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.yedaxia</groupId>
+            <artifactId>japidocs</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
