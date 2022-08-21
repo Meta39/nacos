@@ -22,8 +22,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.version>2020.0.1</spring.cloud.version>
         <spring.cloud.alibaba.version>2021.1</spring.cloud.alibaba.version>
-        <!-- bootstrap.yml有些版本不引入了，先声明比较好,版本建议和spring cloud版本一致 -->
-        <spring.cloud.bootstrap.version>3.1.2</spring.cloud.bootstrap.version>
         <spring.boot.version>2.4.2</spring.boot.version>
         <mysql.version>8.0.23</mysql.version>
         <mybatis.version>2.2.0</mybatis.version>
@@ -65,12 +63,6 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <!-- bootstrap.yml -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                <version>${spring.cloud.bootstrap.version}</version>
             </dependency>
             <!-- mysql -->
             <dependency>
