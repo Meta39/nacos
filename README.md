@@ -4,7 +4,7 @@
         common --系统公共模块，按需引入
             core --通用实体类
             dynamicmybatis --mybatis动态数据源切换，默认引入 aop + mybatis，（不切换数据源的时候不要引入）
-            japidoc --japidoc生成离线接口文档，无需引入
+            japidocs --japidocs生成离线接口文档，无需引入
             minio --minio分布式文件管理系统配置
             redis --redis分布式缓存配置
             openfeign --openfeign远程调用配置
