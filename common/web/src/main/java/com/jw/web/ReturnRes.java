@@ -39,7 +39,7 @@ public class ReturnRes implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (o instanceof String) {//String要特殊处理
             try {
-                return new ObjectMapper().writeValueAsString(new Res(o));
+                return new ObjectMapper().writeValueAsString(Res.ok(o));
             } catch (JsonProcessingException e) {
                 log.error("JSON处理异常", e);
                 return Res.err("JSON处理异常");
@@ -56,6 +56,6 @@ public class ReturnRes implements ResponseBodyAdvice<Object> {
                 return Res.err(status, "error：" + error + ",message:" + message + ",path:" + path);
             }
         }
-        return new Res(o);
+        return Res.ok(o);
     }
 }

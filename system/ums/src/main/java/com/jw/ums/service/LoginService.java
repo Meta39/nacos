@@ -20,7 +20,7 @@ public class LoginService {
     private int tokenOvertime;
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Resource
     private LoginDao loginDao;
@@ -43,7 +43,7 @@ public class LoginService {
     }
 
     public void logout(String token){
-        boolean hasKey = redisTemplate.hasKey(token);
+        boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(token));
         if (hasKey){
             redisTemplate.delete(token);
         }

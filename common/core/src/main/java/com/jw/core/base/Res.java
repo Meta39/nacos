@@ -15,36 +15,21 @@ public class Res<T> implements Serializable {
 
     public Res() {}
 
-    /**
-     * 成功返回
-     * @param data 数据
-     */
-    public Res(T data) {
-        this.code = 200;
-        this.msg = "成功";
-        this.data = data;
+    public static <T> Res<T> ok(T data) {
+        return returnRes( 0, "success",data);
     }
 
-    /**
-     * 常规500异常
-     * @param msg 错误信息
-     */
-    public static Res err(String msg) {
-        Res res = new Res();
-        res.setCode(500);
-        res.setMsg(msg);
-        return res;
+    public static <T> Res<T> err(String msg) {
+        return returnRes(Status.FAIL.getStatus(),  msg,null);
     }
-
-    /**
-     * 其它异常
-     * @param code 状态码
-     * @param msg 错误信息
-     */
-    public static Res err(Integer code,String msg) {
-        Res res = new Res();
+    public static <T> Res<T> err(int code, String msg) {
+        return returnRes( code, msg,null);
+    }
+    private static <T> Res<T> returnRes( int code, String msg,T data) {
+        Res<T> res = new Res<>();
         res.setCode(code);
         res.setMsg(msg);
+        res.setData(data);
         return res;
     }
 

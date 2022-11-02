@@ -4,15 +4,17 @@ package com.jw.core.base;
  * 状态码枚举类
  */
 public enum Status {
+    SUCCESS(0,"success"),
+    FAIL(1,"fail"),
     NOT_LOGIN(550,"token已过期或不存在，请重新登录！"),
     ;
 
     private int status;
-    private String error;
+    private String msg;
 
-    Status(int status, String error) {
+    Status(int status, String msg) {
         this.status = status;
-        this.error = error;
+        this.msg = msg;
     }
 
     public int getStatus() {
@@ -23,11 +25,11 @@ public enum Status {
         this.status = status;
     }
 
-    public String getError() {
-        return error;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

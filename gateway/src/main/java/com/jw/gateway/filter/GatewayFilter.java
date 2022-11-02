@@ -68,12 +68,14 @@ public class GatewayFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         } else {
             //非法请求，抛出异常
-            byte[] bytes;
+            byte[] bytes = new byte[0];
             try {
-                bytes = new ObjectMapper().writeValueAsBytes(!StringUtils.hasLength(token) ? Res.err("请求头token不能为空！") : Res.err(Status.NOT_LOGIN.getStatus(), Status.NOT_LOGIN.getError()));
+                bytes = new ObjectMapper().writeValueAsBytes(!StringUtils.hasLength(token) ? Res.err("请求头token不能为空！") : Res.err(Status.NOT_LOGIN.getStatus(), Status.NOT_LOGIN.getMsg()));
             } catch (JsonProcessingException e) {
-                log.error("JSON处理异常",e);
+                log.error("JSON处理异常：",e);
                 throw new Err("JSON处理异常");
+            }catch (Exception e){
+                log.error("未知异常：",e);
             }
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
